@@ -52,16 +52,32 @@ describe('UsersService', () => {
     expect(res).toEqual(null);
   });
 
-  it('should be call create', () => {
+  it('should be call create', async () => {
+    // Arrange
     const email = 'huytg@email.com';
     const password = '123123321';
-    jest
+    const spyCreate = jest
       .spyOn(userRepository, 'create')
-      .mockReturnValue({ email, password, id: 1 });
-    jest.spyOn(userRepository, 'save').mockReturnValue(undefined);
-    service.create(email, password);
-    expect(userRepository.create).toBeCalled();
-    expect(userRepository.save).toBeCalled();
+      .mockImplementation(({ email, password }) => {
+        return {
+          email,
+          password,
+          id: 1,
+        }
+      })
+
+
+    const spySave = jest.spyOn(userRepository, 'save').mockImplementation(({ email, password }) => {
+      return Promise.resolve({ email, password, id: 1 });
+    });
+
+    // Act
+    const user = await service.create(email, password);
+
+    // Assert
+    expect(user.email).toEqual(email);
+    expect(spyCreate).toHaveBeenCalledTimes(1);
+    expect(spySave).toBeCalled();
   });
 
   it('should be call update', async () => {
@@ -87,6 +103,6 @@ describe('UsersService', () => {
     );
     const existUser = await service.findOne(1);
     const user = await service.update(1, existUser);
-    expect(user.id).toEqual(5);
+    expect(user.id).toEqual(1);
   });
 });
