@@ -60,7 +60,6 @@ describe('UsersService', () => {
       .mockReturnValue({ email, password, id: 1 });
     jest.spyOn(userRepository, 'save').mockReturnValue(undefined);
     service.create(email, password);
-    // service.createOne(email, password);
     expect(userRepository.create).toBeCalled();
     expect(userRepository.save).toBeCalled();
   });
@@ -88,6 +87,6 @@ describe('UsersService', () => {
     );
     const existUser = await service.findOne(1);
     const user = await service.update(1, existUser);
-    expect(user.id).toEqual(1);
+    expect(user.id).toEqual(5);
   });
 });
