@@ -146,7 +146,7 @@ describe('UsersService', () => {
 
     // Assert
     expect(service.remove(existUser?.id)).rejects.toThrowError(
-      'user not founddddd'
+      'user not found'
     );
   });
 });
